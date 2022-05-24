@@ -300,9 +300,12 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	float x = 0.0f;
+	float x = 0.5f;
 	float y = 0.0f;
-	float z = 1.0f;
+	float z = 1.25f;
+	float a = 0.0f;
+	float b = 0.0f;
+	float c = 0.0f;
 
 	// Render loop
 	while (!glfwWindowShouldClose(window))
@@ -327,7 +330,7 @@ int main()
 		//view matrix (aka camera)
 		glm::mat4 view = glm::lookAt(
 			glm::vec3(x, y, z),
-			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(a, b, c),
 			glm::vec3(0.0f, 1.0f, 0.0f)
 		);
 
@@ -395,17 +398,51 @@ int main()
 
 		
 
-		glm::vec4 lightpos = glm::vec4(0.5f, 3.0f, 1.25f, 1.0f);
-		glm::vec3 lightcol = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec4 lightpos = glm::vec4(0.5f, 1.0f, 1.25f, 1.0f);
+
+		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
+		glm::vec3 lightDiffuse = glm::vec3(5.0f, 5.0f, 5.0f);
+		glm::vec3 lightSpecular = glm::vec3(256.0f, 256.0f, 256.0f);
 
 		GLint uniformLight = glGetUniformLocation(program, "light");
 		glUniform4fv(uniformLight, 1, glm::value_ptr(lightpos));
 
-		GLint uniformLightColor = glGetUniformLocation(program, "lightColor");
-		glUniform3fv(uniformLightColor, 1, glm::value_ptr(lightcol));
+		GLint uniformLightAmbient = glGetUniformLocation(program, "lightAmbient");
+		glUniform3fv(uniformLightAmbient, 1, glm::value_ptr(lightAmbient));
 
-		GLint uniformAmbient = glGetUniformLocation(program, "ambient");
-		glUniform1f(uniformAmbient, 0.1f);
+		GLint uniformLightDiffuse = glGetUniformLocation(program, "lightDiffuse");
+		glUniform3fv(uniformLightDiffuse, 1, glm::value_ptr(lightDiffuse));
+
+		GLint uniformLightSpecular = glGetUniformLocation(program, "lightSpecular");
+		glUniform3fv(uniformLightSpecular, 1, glm::value_ptr(lightSpecular));
+
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+			lightAmbient = glm::vec3(0.2f, 0.0f, 0.0f);
+			lightDiffuse = glm::vec3(5.0f, 0.0f, 0.0f);
+			lightSpecular = glm::vec3(2048.0f, 0.0f, 0.0f);
+
+			glUniform3fv(uniformLightAmbient, 1, glm::value_ptr(lightAmbient));
+			glUniform3fv(uniformLightDiffuse, 1, glm::value_ptr(lightDiffuse));
+			glUniform3fv(uniformLightSpecular, 1, glm::value_ptr(lightSpecular));
+		}
+		else if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+			lightAmbient = glm::vec3(0.0f, 0.2f, 0.0f);
+			lightDiffuse = glm::vec3(0.0f, 5.0f, 0.0f);
+			lightSpecular = glm::vec3(0.0f, 2048.0f, 0.0f);
+
+			glUniform3fv(uniformLightAmbient, 1, glm::value_ptr(lightAmbient));
+			glUniform3fv(uniformLightDiffuse, 1, glm::value_ptr(lightDiffuse));
+			glUniform3fv(uniformLightSpecular, 1, glm::value_ptr(lightSpecular));
+		}
+		else if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+			lightAmbient = glm::vec3(0.0f, 0.0f, 0.2f);
+			lightDiffuse = glm::vec3(0.0f, 0.0f, 5.0f);
+			lightSpecular = glm::vec3(0.0f, 0.0f, 2048.0f);
+
+			glUniform3fv(uniformLightAmbient, 1, glm::value_ptr(lightAmbient));
+			glUniform3fv(uniformLightDiffuse, 1, glm::value_ptr(lightDiffuse));
+			glUniform3fv(uniformLightSpecular, 1, glm::value_ptr(lightSpecular));
+		}
 
 		GLint uniformShiny = glGetUniformLocation(program, "shiny");
 		glUniform1i(uniformShiny, 64);

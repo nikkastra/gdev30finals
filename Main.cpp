@@ -487,11 +487,22 @@ int main()
 
 		glDrawArrays(GL_TRIANGLES, 16, 22);
 
-		glm::vec4 lightpos = glm::vec4(0.5f, 1.0f, 1.25f, 1.0f);
+		float xposi = cos(time/8);
+		float yposi = sin(time/8);
+
+		glm::vec4 lightpos = glm::vec4(cos(time), sin(time), 0.0f, 1.0f);
 
 		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
-		glm::vec3 lightDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-		glm::vec3 lightSpecular = glm::vec3(256.0f, 256.0f, 256.0f);
+		glm::vec3 lightDiffuse;
+		glm::vec3 lightSpecular;
+
+		if(yposi < 0){
+			lightDiffuse = glm::vec3(0.0f, 0.0f, 0.0f);
+			lightSpecular = glm::vec3(0.0f, 0.0f, 0.0f);
+		} else {
+			lightDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+			lightSpecular = glm::vec3(256.0f, 256.0f, 256.0f);
+		}
 
 		GLint uniformLight = glGetUniformLocation(program, "light");
 		glUniform4fv(uniformLight, 1, glm::value_ptr(lightpos));

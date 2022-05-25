@@ -117,7 +117,7 @@ int main()
 	// --- Vertex specification ---
 	
 	// Set up the data for each vertex of the triangle
-	Vertex vertices[16];
+	Vertex vertices[22];
 
 	//front face
 	vertices[0].x = 0.0f;	vertices[0].y = 0.85f;	vertices[0].z = 0.0f;
@@ -203,6 +203,37 @@ int main()
 	vertices[15].r = 0;		vertices[15].g = 255;	vertices[15].b = 0;
 	vertices[15].u = 0.75f;	vertices[15].v = 0.0f;
 	vertices[15].nx = -0.5f;	vertices[15].ny = 0.0f;	vertices[15].nz = -0.5f;
+
+	//sand
+	vertices[16].x = -0.5f;	vertices[16].y = 0.0f;	vertices[16].z = 1.0f;
+	vertices[16].r = 0;		vertices[16].g = 255;	vertices[16].b = 0;
+	vertices[16].u = 0.0f;	vertices[16].v = 0.0f;
+	vertices[16].nx = 0.0f;	vertices[16].ny = 1.0f;	vertices[16].nz = 0.0f;
+
+	vertices[17].x = -0.5f;	vertices[17].y = 0.0f;	vertices[17].z = -1.0f;
+	vertices[17].r = 0;		vertices[17].g = 255;	vertices[17].b = 0;
+	vertices[17].u = 0.0f;	vertices[17].v = 1.0f;
+	vertices[17].nx = 0.0f;	vertices[17].ny = 1.0f;	vertices[17].nz = 0.0f;
+
+	vertices[18].x = 0.5f;	vertices[18].y = 0.0f;	vertices[18].z = 1.0f;
+	vertices[18].r = 0;		vertices[18].g = 255;	vertices[18].b = 0;
+	vertices[18].u = 1.0f;	vertices[18].v = 0.0f;
+	vertices[18].nx = 0.0f;	vertices[18].ny = 1.0f;	vertices[18].nz = 0.0f;
+
+	vertices[19].x = 0.5f;	vertices[19].y = 0.0f;	vertices[19].z = 1.0f;
+	vertices[19].r = 0;		vertices[19].g = 255;	vertices[19].b = 0;
+	vertices[19].u = 1.0f;	vertices[19].v = 0.0f;
+	vertices[19].nx = 0.0f;	vertices[19].ny = 1.0f;	vertices[19].nz = 0.0f;
+
+	vertices[20].x = 0.5f;	vertices[20].y = 0.0f;	vertices[20].z = -1.0f;
+	vertices[20].r = 0;		vertices[20].g = 255;	vertices[20].b = 0;
+	vertices[20].u = 1.0f;	vertices[20].v = 1.0f;
+	vertices[20].nx = 0.0f;	vertices[20].ny = 1.0f;	vertices[20].nz = 0.0f;
+
+	vertices[21].x = -0.5f;	vertices[21].y = 0.0f;	vertices[21].z = -1.0f;
+	vertices[21].r = 0;		vertices[21].g = 255;	vertices[21].b = 0;
+	vertices[21].u = 0.0f;	vertices[21].v = 1.0f;
+	vertices[21].nx = 0.0f;	vertices[21].ny = 1.0f;	vertices[21].nz = 0.0f;
 	
 	
 
@@ -266,42 +297,12 @@ int main()
 	int imageWidth, imageHeight, numChannels;
 
 	// Read the image data and store it in an unsigned char array
-	unsigned char* imageData = stbi_load("obama.jpg", &imageWidth, &imageHeight, &numChannels, 0);
-
-	// Make sure that we actually loaded the image before uploading the data to the GPU
-	if (imageData != nullptr)
-	{
-		// Our texture is 2D, so we bind our texture to the GL_TEXTURE_2D target
-		glBindTexture(GL_TEXTURE_2D, tex);
-
-		// Set the filtering methods for magnification and minification
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		// Set the wrapping method for the s-axis (x-axis) and t-axis (y-axis)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		// Upload the image data to GPU memory
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
-
-		// If we set minification to use mipmaps, we can tell OpenGL to generate the mipmaps for us
-		//glGenerateMipmap(GL_TEXTURE_2D);
-
-		// Once we have copied the data over to the GPU, we can delete
-		// the data on the CPU side, since we won't be using it anymore
-		stbi_image_free(imageData);
-		imageData = nullptr;
-	}
-	else
-	{
-		std::cerr << "Failed to load image" << std::endl;
-	}
+	
 
 	glEnable(GL_DEPTH_TEST);
 
 	float x = 0.5f;
-	float y = 0.0f;
+	float y = 1.0f;
 	float z = 1.25f;
 	float a = 0.0f;
 	float b = 0.0f;
@@ -338,32 +339,32 @@ int main()
 		glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			x = x + 0.001f;
+			x = x + 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
 		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			x = x - 0.001f;
+			x = x - 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
 		else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			z = z + 0.001f;
+			z = z + 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			z = z - 0.001f;
+			z = z - 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
 		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			y = y + 0.001f;
+			y = y + 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
 		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			y = y - 0.001f;
+			y = y - 0.01f;
 
 			glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 		}
@@ -377,12 +378,44 @@ int main()
 		auto t_now = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
 
-		//cube 1
 		//operation matrices
+
+		unsigned char* imageData = stbi_load("obama.jpg", &imageWidth, &imageHeight, &numChannels, 0);
+
+		// Make sure that we actually loaded the image before uploading the data to the GPU
+		if (imageData != nullptr)
+		{
+			// Our texture is 2D, so we bind our texture to the GL_TEXTURE_2D target
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+			// Set the filtering methods for magnification and minification
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			// Set the wrapping method for the s-axis (x-axis) and t-axis (y-axis)
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			// Upload the image data to GPU memory
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+			// If we set minification to use mipmaps, we can tell OpenGL to generate the mipmaps for us
+			//glGenerateMipmap(GL_TEXTURE_2D);
+
+			// Once we have copied the data over to the GPU, we can delete
+			// the data on the CPU side, since we won't be using it anymore
+			stbi_image_free(imageData);
+			imageData = nullptr;
+		}
+		else
+		{
+			std::cerr << "Failed to load image" << std::endl;
+		}
+		//pyramid 1
 		glm::mat4 mat = glm::mat4(1.0f);
 		glm::mat4 normat = glm::mat4(1.0f);
 
-		mat = glm::scale(mat, glm::vec3(2.0f, 2.0f, 2.0f));
+		mat = glm::scale(mat, glm::vec3(1.0f, 1.0f, 1.0f));
 		mat = glm::translate(mat, glm::vec3(0.0f, 0.0f, -0.5f));
 		mat = glm::rotate(mat, time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		normat = glm::transpose(glm::inverse(mat));
@@ -396,12 +429,68 @@ int main()
 		// Draw the 3 vertices using triangle primitives
 		glDrawArrays(GL_TRIANGLES, 0, 16);
 
+		//pyramid 2
+		mat = glm::scale(mat, glm::vec3(0.7f, 0.7f, 0.7f));
+		mat = glm::translate(mat, glm::vec3(1.5f, 0.0f, 1.0f));
+		//mat = glm::rotate(mat, time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		normat = glm::transpose(glm::inverse(mat));
+
+		uniformLocation = glGetUniformLocation(program, "mat");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat));
+
+		// Draw the 3 vertices using triangle primitives
+		glDrawArrays(GL_TRIANGLES, 0, 16);
+
+		//sand ground
+		imageData = stbi_load("sand.jpg", &imageWidth, &imageHeight, &numChannels, 0);
+
+		// Make sure that we actually loaded the image before uploading the data to the GPU
+		if (imageData != nullptr)
+		{
+			// Our texture is 2D, so we bind our texture to the GL_TEXTURE_2D target
+			glBindTexture(GL_TEXTURE_2D, tex);
+
+			// Set the filtering methods for magnification and minification
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			// Set the wrapping method for the s-axis (x-axis) and t-axis (y-axis)
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			// Upload the image data to GPU memory
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+			// If we set minification to use mipmaps, we can tell OpenGL to generate the mipmaps for us
+			//glGenerateMipmap(GL_TEXTURE_2D);
+
+			// Once we have copied the data over to the GPU, we can delete
+			// the data on the CPU side, since we won't be using it anymore
+			stbi_image_free(imageData);
+			imageData = nullptr;
+		}
+		else
+		{
+			std::cerr << "Failed to load image" << std::endl;
+		}
 		
+		mat = glm::mat4(1.0f);
+		normat = glm::mat4(1.0f);
+
+		mat = glm::scale(mat, glm::vec3(2.0f, 2.0f, 2.0f));
+		mat = glm::translate(mat, glm::vec3(0.0f, 0.0f, 0.0f));
+		mat = glm::rotate(mat, time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		normat = glm::transpose(glm::inverse(mat));
+
+		uniformLocation = glGetUniformLocation(program, "mat");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat));
+
+		glDrawArrays(GL_TRIANGLES, 16, 22);
 
 		glm::vec4 lightpos = glm::vec4(0.5f, 1.0f, 1.25f, 1.0f);
 
 		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
-		glm::vec3 lightDiffuse = glm::vec3(5.0f, 5.0f, 5.0f);
+		glm::vec3 lightDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec3 lightSpecular = glm::vec3(256.0f, 256.0f, 256.0f);
 
 		GLint uniformLight = glGetUniformLocation(program, "light");
@@ -445,7 +534,7 @@ int main()
 		}
 
 		GLint uniformShiny = glGetUniformLocation(program, "shiny");
-		glUniform1i(uniformShiny, 64);
+		glUniform1i(uniformShiny, 2048);
 
 		// "Unuse" the vertex array object
 		glBindVertexArray(0);

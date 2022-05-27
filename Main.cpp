@@ -490,11 +490,14 @@ int main()
 		float xposi = cos(time/8);
 		float yposi = sin(time/8);
 
-		glm::vec4 lightpos = glm::vec4(cos(time), sin(time), 0.0f, 1.0f);
+		glm::vec4 lightpos = glm::vec4(xposi, yposi, 0.0f, 1.0f);
+		glm::vec4 lightpos2 = glm::vec4(0.0f, 0.5f, 1.25f, 1.0f);
 
-		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
+		glm::vec3 lightAmbient = glm::vec3(0.1f, 0.1f, 0.1f);
 		glm::vec3 lightDiffuse;
 		glm::vec3 lightSpecular;
+		glm::vec3 lightDiffuse2;
+		glm::vec3 lightSpecular2;
 
 		if(yposi < 0){
 			lightDiffuse = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -504,8 +507,19 @@ int main()
 			lightSpecular = glm::vec3(256.0f, 256.0f, 256.0f);
 		}
 
+		if(yposi < abs(0.25)){
+			lightDiffuse2 = glm::vec3(0.5f, 0.3235f, 0.0f);
+			lightSpecular2 = glm::vec3(256.0f, 256.0f, 256.0f);
+		} else {
+			lightDiffuse2 = glm::vec3(0.0f, 0.0f, 0.0f);
+			lightSpecular2 = glm::vec3(0.0f, 0.0f, 0.0f);
+		}
+
 		GLint uniformLight = glGetUniformLocation(program, "light");
 		glUniform4fv(uniformLight, 1, glm::value_ptr(lightpos));
+
+		GLint uniformLight2 = glGetUniformLocation(program, "light2");
+		glUniform4fv(uniformLight2, 1, glm::value_ptr(lightpos2));
 
 		GLint uniformLightAmbient = glGetUniformLocation(program, "lightAmbient");
 		glUniform3fv(uniformLightAmbient, 1, glm::value_ptr(lightAmbient));
@@ -515,6 +529,12 @@ int main()
 
 		GLint uniformLightSpecular = glGetUniformLocation(program, "lightSpecular");
 		glUniform3fv(uniformLightSpecular, 1, glm::value_ptr(lightSpecular));
+
+		GLint uniformLightDiffuse2 = glGetUniformLocation(program, "lightDiffuse2");
+		glUniform3fv(uniformLightDiffuse2, 1, glm::value_ptr(lightDiffuse2));
+
+		GLint uniformLightSpecular2 = glGetUniformLocation(program, "lightSpecular2");
+		glUniform3fv(uniformLightSpecular2, 1, glm::value_ptr(lightSpecular2));
 
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 			lightAmbient = glm::vec3(0.2f, 0.0f, 0.0f);

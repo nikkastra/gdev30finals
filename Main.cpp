@@ -508,7 +508,7 @@ int main()
 		}
 
 		if(yposi < abs(0.25)){
-			lightDiffuse2 = glm::vec3(0.5f, 0.3235f, 0.0f);
+			lightDiffuse2 = glm::vec3(0.75f, 0.4853f, 0.0f);
 			lightSpecular2 = glm::vec3(256.0f, 256.0f, 256.0f);
 		} else {
 			lightDiffuse2 = glm::vec3(0.0f, 0.0f, 0.0f);
